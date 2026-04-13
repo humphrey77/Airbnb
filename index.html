@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CozyStay - Premium Airbnb Experiences">
+    <title>CozyStay | Premium Airbnb & Vacation Homes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root { --primary: #d4af37; }
+        body { scroll-behavior: smooth; }
+
+        /* Full Cover Carousel */
+        .carousel-item { height: 100vh; position: relative; }
+        .carousel-item img { 
+            height: 100vh; width: 100%; object-fit: cover; object-position: center; 
+        }
+        .carousel-item::before { 
+            content: ""; position: absolute; top: 0; left: 0; 
+            width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1; 
+        }
+        .hero-text { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            color: white; text-align: center; z-index: 2; width: 90%; max-width: 800px; 
+        }
+
+        /* ULTRA CLEAN MOBILE TOGGLER - ONLY 3 STRAIGHT LINES */
+        .navbar-toggler {
+            border: none !important;
+            background: transparent !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+        .navbar-toggler:focus {
+            box-shadow: none !important;
+            outline: none !important;
+        }
+        .navbar-toggler-icon {
+            background-image: none !important;
+            width: 30px;
+            height: 3px;
+            background-color: white;
+            position: relative;
+            display: block;
+            margin: 6px auto;
+        }
+        .navbar-toggler-icon::before,
+        .navbar-toggler-icon::after {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 3px;
+            background-color: white;
+            left: 0;
+        }
+        .navbar-toggler-icon::before { top: -8px; }
+        .navbar-toggler-icon::after { bottom: -8px; }
+
+        
+
+        /* New Fade-in */
+        .fade-in {
+    opacity: 0;
+    transform: translateY(60px) scale(0.98);
+    transition: all 0.9s ease;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+        /* Service Cards */
+        .service-card { transition: all 0.4s ease; overflow: hidden; }
+        .service-card:hover { transform: translateY(-12px); box-shadow: 0 15px 30px rgba(212, 175, 55, 0.25); }
+        .service-card img { height: 200px; object-fit: cover; width: 100%; }
+
+        /* Gallery */
+        .gallery-item { overflow: hidden; border-radius: 12px; height: 260px; cursor: pointer; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .gallery-item:hover img { transform: scale(1.12); }
+
+        /* Lightbox - Bigger & Clear X */
+        #lightbox { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; 
+        }
+        #lightbox img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        .lightbox-controls { 
+            position: absolute; top: 30px; right: 30px; 
+            color: white; font-size: 45px; font-weight: bold; 
+            cursor: pointer; z-index: 2100; 
+        }
+
+        .whatsapp-float {
+            position: fixed; bottom: 25px; right: 25px; background: #25D366;
+            width: 60px; height: 60px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 28px;
+            color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            animation: bubble 2s infinite; z-index: 1000;
+        }
+        @keyframes bubble { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+        footer { background: #1a1a1a; }
+
+        /* Glass Popup */
+#successPopup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000; /* higher than lightbox */
+}
+
+.popup-box {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    animation: popUp 0.4s ease;
+}
+
+.popup-box i {
+    font-size: 50px;
+    color: #00ffae;
+    margin-bottom: 15px;
+}
+
+.popup-box button {
+    margin-top: 15px;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 30px;
+    background: #d4af37;
+    font-weight: bold;
+}
+
+@keyframes popUp {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* new */
+@media (max-width: 576px) {
+    h1 { font-size: 1.8rem !important; }
+    h2 { font-size: 1.5rem !important; }
+    .lead { font-size: 0.95rem; }
+    p { font-size: 0.9rem; }
+}
+
+@media (max-width: 576px) {
+    .service-card img {
+        height: 140px;
+    }
+
+    .gallery-item {
+        height: 180px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-text h1 {
+        font-size: 2rem;
+    }
+
+    .hero-text p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+}
+
+@media (max-width: 576px) {
+    .navbar {
+        padding: 10px 15px;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+}
+
+body {
+    padding-top: 63px;
+}
+
+/* ===== ADVANCED RESPONSIVENESS ===== */
+
+/* Smooth font scaling */
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.6rem, 4vw, 2.5rem); }
+h5 { font-size: clamp(1rem, 2.5vw, 1.3rem); }
+p  { font-size: clamp(0.9rem, 2vw, 1.1rem); }
+
+/* Better spacing scaling */
+section {
+    padding: clamp(40px, 6vw, 80px) 0;
+}
+
+/* Tablet view → 2 columns */
+@media (max-width: 992px) {
+    .col-md-4 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+/* Small phones → tighter spacing */
+@media (max-width: 576px) {
+    .hero-text {
+        width: 95%;
+    }
+
+    .carousel-item img {
+        object-position: center;
+    }
+}
+
+.card, .btn {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px) scale(1.02);
+}
+@media (max-width: 768px) {
+    #whyus .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        text-align: center;
+    }
+}
+@media (max-width: 768px) {
+    #location .col-lg-5 {
+        text-align: center;
+    }
+
+    #location .col-lg-5 i {
+        display: block;
+        margin-bottom: 8px;
+    }
+}
+@media (max-width: 768px) {
+    #location .mb-4 {
+        margin-bottom: 25px;
+    }
+}
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* POPUP BACKGROUND */
+#successPopup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+    z-index: 5000;
+}
+
+/* SHOW STATE */
+#successPopup.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* POPUP BOX */
+.popup-box {
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 30px 40px;
+    text-align: center;
+    color: white;
+    backdrop-filter: blur(15px);
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+}
+
+/* ANIMATION */
+#successPopup.show .popup-box {
+    transform: scale(1);
+}
+
+/* ICON */
+.popup-box i {
+    font-size: 50px;
+    color: #28a745;
+    margin-bottom: 15px;
+}
+    </style>
+</head>
+<body>
+
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="#">CozyStay</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav ms-auto gap-3">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#properties">Properties</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO CAROUSEL -->
+    <div id="home" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://picsum.photos/id/1015/1920/1080" alt="Cozy Villa">
+                <div class="hero-text">
+                    <h1 class="display-3 fw-bold">Your Home Away From Home</h1>
+                    <p class="lead mb-3">Premium Airbnb experiences in prime locations</p>
+                    <a href="#location" class="btn btn-light btn-lg">Contact Us</a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://picsum.photos/id/133/1920/1080" alt="Luxury Apartment">
+                <div class="hero-text">
+                    <h1 class="display-3 fw-bold">Relax in Style</h1>
+                    <p class="lead mb-3">Book unique stays with comfort and privacy</p>
+                    <a href="#location" class="btn btn-light btn-lg">Contact Us</a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://picsum.photos/id/160/1920/1080" alt="Beach House">
+                <div class="hero-text">
+                    <h1 class="display-3 fw-bold">Safe & Comfortable</h1>
+                    <p class="lead mb-3">Unforgettable memories in beautiful homes</p>
+                    <a href="#location" class="btn btn-light btn-lg">Contact Us</a>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#home" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#home" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+    <!-- About -->
+    <section id="about" class="py-5 bg-light fade-in">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="display-5 fw-bold mb-4">About CozyStay</h2>
+                    <p class="lead">We offer carefully selected, high-quality Airbnb properties for travelers who want comfort, style, and unforgettable memories. From cozy apartments to luxury villas, every stay is designed to feel like home.</p>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://picsum.photos/id/201/800/550" class="img-fluid rounded shadow" loading="lazy" alt="Airbnb Interior">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Properties -->
+    <section id="properties" class="py-5 fade-in">
+        <div class="container">
+            <h2 class="text-center display-5 fw-bold mb-5">Our Properties</h2>
+            <div class="row g-4">
+                <div class="col-6 col-md-4">
+                    <div class="card service-card h-100 shadow-sm">
+                        <img src="https://picsum.photos/id/1015/600/400" class="card-img-top" loading="lazy" alt="Luxury Villa">
+                        <div class="card-body text-center">
+                            <h5>Luxury Villas</h5>
+                            <p class="text-muted">Spacious private villas with pools</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="card service-card h-100 shadow-sm">
+                        <img src="https://picsum.photos/id/133/600/400" class="card-img-top" loading="lazy" alt="Modern Apartment">
+                        <div class="card-body text-center">
+                            <h5>Modern Apartments</h5>
+                            <p class="text-muted">Stylish city apartments with great views</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="card service-card h-100 shadow-sm">
+                        <img src="https://picsum.photos/id/160/600/400" class="card-img-top" loading="lazy" alt="Beach House">
+                        <div class="card-body text-center">
+                            <h5>Beachfront Homes</h5>
+                            <p class="text-muted">Relax by the sea in private homes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="card service-card h-100 shadow-sm">
+                        <img src="https://picsum.photos/id/201/600/400" class="card-img-top" loading="lazy" alt="Cozy Cottage">
+                        <div class="card-body text-center">
+                            <h5>Cozy Cottages</h5>
+                            <p class="text-muted">Warm and intimate countryside stays</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="card service-card h-100 shadow-sm">
+                        <img src="https://picsum.photos/id/202/600/400" class="card-img-top" loading="lazy" alt="Rooftop">
+                        <div class="card-body text-center">
+                            <h5>Rooftop Apartments</h5>
+                            <p class="text-muted">Stunning views and city vibes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="card service-card h-100 shadow-sm">
+                        <img src="https://picsum.photos/id/203/600/400" class="card-img-top" loading="lazy" alt="Family Home">
+                        <div class="card-body text-center">
+                            <h5>Family-Friendly Homes</h5>
+                            <p class="text-muted">Perfect for groups and families</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section id="whyus" class="py-5 bg-light fade-in">
+        <div class="container">
+            <h2 class="text-center display-5 fw-bold mb-5">Why Guests Love CozyStay</h2>
+            <div class="row g-4 text-center">
+                <div class="col-md-4"><div class="p-4"><i class="fas fa-key fa-3x text-primary mb-3"></i><h5>Easy Booking</h5></div></div>
+                <div class="col-md-4"><div class="p-4"><i class="fas fa-home fa-3x text-success mb-3"></i><h5>Verified Properties</h5></div></div>
+                <div class="col-md-4"><div class="p-4"><i class="fas fa-star fa-3x text-warning mb-3"></i><h5>Exceptional Hosts</h5></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section id="gallery" class="py-5 fade-in">
+        <div class="container">
+            <h2 class="text-center display-5 fw-bold mb-5">Our Properties</h2>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 gallery-item"><img src="https://picsum.photos/id/1015/800/600" loading="lazy" alt="Villa" onclick="openLightbox(0)"></div>
+                <div class="col-lg-4 col-md-6 gallery-item"><img src="https://picsum.photos/id/133/800/600" loading="lazy" alt="Apartment" onclick="openLightbox(1)"></div>
+                <div class="col-lg-4 col-md-6 gallery-item"><img src="https://picsum.photos/id/160/800/600" loading="lazy" alt="Beach House" onclick="openLightbox(2)"></div>
+                <div class="col-lg-4 col-md-6 gallery-item"><img src="https://picsum.photos/id/201/800/600" loading="lazy" alt="Cottage" onclick="openLightbox(3)"></div>
+                <div class="col-lg-4 col-md-6 gallery-item"><img src="https://picsum.photos/id/202/800/600" loading="lazy" alt="Rooftop" onclick="openLightbox(4)"></div>
+                <div class="col-lg-4 col-md-6 gallery-item"><img src="https://picsum.photos/id/203/800/600" loading="lazy" alt="Family Home" onclick="openLightbox(5)"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox">
+        <span class="lightbox-controls" onclick="closeLightbox()">×</span>
+        <img id="lightbox-img" src="" alt="">
+        <button onclick="prevImage()" class="btn btn-light position-absolute start-0 top-50">←</button>
+        <button onclick="nextImage()" class="btn btn-light position-absolute end-0 top-50">→</button>
+    </div>
+
+    <!-- Location & Contact -->
+    <section id="location" class="py-5 fade-in">
+        <div class="container">
+            <h2 class="text-center display-5 fw-bold mb-5">Our Location</h2>
+            <div class="row g-5 align-items-start">
+                <div class="col-lg-5">
+                    <h4 class="fw-bold mb-4">Get In Touch</h4>
+                    <div class="mb-4">
+                        <p class="mb-1"><i class="fas fa-phone me-3 text-primary"></i><strong>Phone / WhatsApp:</strong></p>
+                        <p class="fs-5">0708 974 3895</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="mb-1"><i class="fas fa-map-marker-alt me-3 text-primary"></i><strong>Address:</strong></p>
+                        <p>Victoria Island, Lagos, Nigeria</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="mb-1"><i class="fas fa-envelope me-3 text-primary"></i><strong>Email:</strong></p>
+                        <p>humphreyukhurebor@gmail.com</p>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="ratio ratio-16x9 rounded shadow">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.5!2d3.428!3d6.428!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2f0f0f0f0f%3A0x0!2sVictoria%20Island%2C%20Lagos!5e0!3m2!1sen!2sng!4v1740000000000" 
+                                width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT FORM SECTION -->
+<section id="contact" class="py-5 bg-light fade-in">
+    <div class="container">
+        <h2 class="text-center display-5 fw-bold mb-5">GET IN TOUCH</h2>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+
+                <form id="contactForm" class="p-4">
+
+                    <div class="mb-3">
+                        <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <textarea name="message" class="form-control" rows="5" placeholder="Book a spa treatment" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100">Send Message</button>
+
+                </form>
+                <p class="text-center mt-4 fs-5">
+                        Call: <strong>0708 974 3895</strong><br>
+                        Or reach us on social media
+                    </p>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/2347089743895?text=Hello%2C%20I%27m%20interested%20in%20booking%20an%20Airbnb%20with%20CozyStay.%20My%20name%20is..." 
+       target="_blank" class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="fw-bold">CozyStay</h5>
+                    <p>Premium Airbnb & Vacation Homes</p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="fw-bold">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#about" class="text-white text-decoration-none">About Us</a></li>
+                        <li><a href="#properties" class="text-white text-decoration-none">Properties</a></li>
+                        <li><a href="#gallery" class="text-white text-decoration-none">Gallery</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="fw-bold">Follow Us</h5>
+                    <a href="#" class="text-white me-3 fs-4"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white me-3 fs-4"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" class="text-white fs-4"><i class="fab fa-x-twitter"></i></a>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2026 CozyStay • Made by Humphrey Web Solutions</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fade-in
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        fadeElements.forEach(el => observer.observe(el));
+
+        // Lightbox
+        let currentIndex = 0;
+        const images = document.querySelectorAll('.gallery-item img');
+
+        function openLightbox(index) {
+            currentIndex = index;
+            document.getElementById('lightbox').style.display = 'flex';
+            document.getElementById('lightbox-img').src = images[index].src;
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            document.getElementById('lightbox-img').src = images[currentIndex].src;
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            document.getElementById('lightbox-img').src = images[currentIndex].src;
+        }
+
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target.id === 'lightbox') closeLightbox();
+        });
+    </script>
+
+    <script>
+const form = document.getElementById("contactForm");
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault(); // 🚫 stops redirect
+
+    fetch("https://formspree.io/f/mnjoegay", {
+        method: "POST",
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+    })
+    .then(response => {
+        if (response.ok) {
+            document.getElementById("successPopup").style.display = "flex";
+            showPopup(); // ✅ THIS is where it goes
+            form.reset(); // reset fields
+        } else {
+            alert("Something went wrong. Please try again.");
+        }
+    })
+    .catch(() => {
+        alert("Network error. Check your internet.");
+    });
+});
+
+function closePopup() {
+    document.getElementById("successPopup").style.display = "none";
+}
+</script>
+
+<!-- new -->
+<script>
+document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+        const navbar = document.querySelector('.navbar-collapse');
+        const bsCollapse = new bootstrap.Collapse(navbar, {
+            toggle: false
+        });
+        bsCollapse.hide();
+    });
+});
+
+function showPopup() {
+    const popup = document.getElementById('successPopup');
+    popup.classList.add('show');
+
+    setTimeout(() => {
+        popup.classList.remove('show');
+    }, 3000);
+}
+
+</script>
+
+<!-- New Success Popup -->
+<div id="successPopup">
+    <div class="popup-box">
+        <i class="fas fa-check-circle"></i>
+        <h4>Message Sent!</h4>
+        <p>We’ll get back to you shortly.</p>
+    </div>
+</div>
+</body>
+</html>
