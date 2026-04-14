@@ -785,8 +785,16 @@ section {
     <div id="lightbox">
         <span class="lightbox-controls" onclick="closeLightbox()">×</span>
         <img id="lightbox-img" src="" alt="">
-        <button onclick="prevImage()" class="btn btn-light position-absolute start-0 top-50">←</button>
-        <button onclick="nextImage()" class="btn btn-light position-absolute end-0 top-50">→</button>
+        <div id="imageCounter" style="
+    position:absolute;
+    bottom:20px;
+    color:white;
+    font-size:16px;
+    background:rgba(0,0,0,0.5);
+    padding:5px 12px;
+    border-radius:20px;
+">
+</div>
     </div>
 
     <!-- Location & Contact -->
@@ -906,31 +914,108 @@ section {
 
         // Lightbox
         let currentIndex = 0;
-        const images = document.querySelectorAll('.gallery-item img');
+const images = document.querySelectorAll('.gallery-item img');
 
-        function openLightbox(index) {
-            currentIndex = index;
-            document.getElementById('lightbox').style.display = 'flex';
-            document.getElementById('lightbox-img').src = images[index].src;
-        }
+let isZoomed = false;
+let lastTap = 0;
 
-        function closeLightbox() {
-            document.getElementById('lightbox').style.display = 'none';
-        }
+function openLightbox(index) {
+    currentIndex = index;
+    document.getElementById('lightbox').style.display = 'flex';
+    isZoomed = false;
+    updateLightbox();
+}
 
-        function nextImage() {
-            currentIndex = (currentIndex + 1) % images.length;
-            document.getElementById('lightbox-img').src = images[currentIndex].src;
-        }
+function updateLightbox() {
+    const img = document.getElementById('lightbox-img');
+    img.src = images[currentIndex].src;
+    img.style.transform = "scale(1)";
 
-        function prevImage() {
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
-            document.getElementById('lightbox-img').src = images[currentIndex].src;
-        }
+    // image counter
+    document.getElementById('imageCounter').innerText =
+        `${currentIndex + 1} / ${images.length}`;
+}
 
-        document.getElementById('lightbox').addEventListener('click', function(e) {
-            if (e.target.id === 'lightbox') closeLightbox();
-        });
+function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+}
+
+/* NEXT / PREV */
+function nextImage() {
+    currentIndex = (currentIndex + 1) % images.length;
+    updateLightbox();
+}
+
+function prevImage() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    updateLightbox();
+}
+
+/* KEYBOARD */
+document.addEventListener('keydown', (e) => {
+    const lightbox = document.getElementById('lightbox');
+    if (lightbox.style.display === 'flex') {
+        if (e.key === 'ArrowRight') nextImage();
+        if (e.key === 'ArrowLeft') prevImage();
+        if (e.key === 'Escape') closeLightbox();
+    }
+});
+
+/* SWIPE (mobile) */
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.getElementById('lightbox').addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+document.getElementById('lightbox').addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
+
+function handleSwipe() {
+    let diff = touchStartX - touchEndX;
+
+    if (Math.abs(diff) > 50 && !isZoomed) {
+        if (diff > 0) nextImage();
+        else prevImage();
+    }
+}
+
+/* =========================
+   DOUBLE TAP / DOUBLE CLICK ZOOM
+========================= */
+
+const lightboxImg = document.getElementById('lightbox-img');
+
+/* mobile double tap */
+lightboxImg.addEventListener('touchend', function () {
+    const now = new Date().getTime();
+    const timeSince = now - lastTap;
+
+    if (timeSince < 300 && timeSince > 0) {
+        toggleZoom();
+    }
+    lastTap = now;
+});
+
+/* desktop double click */
+lightboxImg.addEventListener('dblclick', function () {
+    toggleZoom();
+});
+
+function toggleZoom() {
+    if (!isZoomed) {
+        lightboxImg.style.transform = "scale(2)";
+        lightboxImg.style.cursor = "zoom-out";
+        isZoomed = true;
+    } else {
+        lightboxImg.style.transform = "scale(1)";
+        lightboxImg.style.cursor = "zoom-in";
+        isZoomed = false;
+    }
+}
     </script>
 
     <script>
